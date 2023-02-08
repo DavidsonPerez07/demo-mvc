@@ -33,5 +33,4 @@ public class BookingCar {
     public Car getCar() {
         return car;
     }
-
 }

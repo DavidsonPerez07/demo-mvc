@@ -34,4 +34,19 @@ public class BookingModel {
         clients.add(client);
     }
 
+    public List<Car> getCars() {
+        return cars;
+    }
+
+    public void addCar(Car car) {
+        cars.add(car);
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void addBooking(Booking booking) {
+        bookings.add(booking);
+    }
 }

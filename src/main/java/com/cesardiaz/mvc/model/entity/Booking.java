@@ -67,5 +67,12 @@ public class Booking {
         
         cars.remove(bookingCar);
     }
+
+    @Override
+    public String toString() {
+        return agency + " | " + startDate + " | " + finishDate + " | "
+                + total + " | " + client + " | " + cars;
+    }
+    
     
 }
