@@ -3,8 +3,6 @@ package com.cesardiaz.mvc.controller;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.print.DocFlavor.STRING;
-
 import com.cesardiaz.mvc.model.BookingModel;
 import com.cesardiaz.mvc.model.ConnectionDB;
 import com.cesardiaz.mvc.model.entity.Booking;
@@ -59,7 +57,8 @@ public class BookingController {
     }
 
     public void addCar(Integer garage, String plate, String model, String color, String brand) {
-        //model.addCar(new Car(garage, plate, model, color, brand)); --- Linea no funciona
+        var car = new Car(garage, plate, model, color, brand);
+        this.model.addCar(car);
     }
     
     public boolean verifyExistCar(String plate) {

@@ -104,13 +104,18 @@ public class BookingModel {
             var conn = ConnectionDB.getConnection();
             var stmt = conn.createStatement();
 
-            var sql = new StringBuilder("INSERT INTO customer (client_code, dni, first_name, last_name, address, mobile_phone) VALUES (")
+            // var sql1= """
+            //         INSERT INTO customer (client_code, dni, first_name, last_name, address, phone_number)
+            //         VALUES (?, ?, ?, ?, ?, ?)
+            //         """;
+
+            var sql = new StringBuilder("INSERT INTO customer (client_code, dni, first_name, last_name, address, phone_number) VALUES (")
             .append(client.getCode() == null ? "NULL" : "'"+client.getCode()+"'").append(",")
             .append(client.getDni() == null ? "NULL" : "'"+client.getDni()+"'").append(",")
             .append(client.getFirstName() == null ? "NULL" : "'"+client.getFirstName()+"'").append(",")
             .append(client.getLastName() == null ? "NULL" : "'"+client.getLastName()+"'").append(",")
             .append(client.getAddress() == null ? "NULL" : "'"+client.getAddress()+"'").append(",")
-            .append(client.getMobilePhone() == null ? "NULL" : "'"+client.getMobilePhone()+"'").append(",")
+            .append(client.getMobilePhone() == null ? "NULL" : "'"+client.getMobilePhone()+"'").append(")")
             .toString();
             
             stmt.executeUpdate(sql);
@@ -201,7 +206,7 @@ public class BookingModel {
     public void modifyClient(String dni, String newMobilePhone, String newAddress) {
         try {
             var conn = ConnectionDB.getConnection();
-            String query = "UPDATE customer SET mobile_phone = '" + newMobilePhone + "', address = '" + newAddress + "' WHERE dni = ?";
+            String query = "UPDATE customer SET phone_number = '" + newMobilePhone + "', address = '" + newAddress + "' WHERE dni = ?";
             var stmt = conn.prepareStatement(query);
             stmt.setString(1, dni);
             stmt.executeUpdate();

@@ -1,11 +1,7 @@
 package com.cesardiaz.mvc.view;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Scanner;
-
-import javax.sound.sampled.SourceDataLine;
-import javax.sql.rowset.serial.SerialRef;
 
 import com.cesardiaz.mvc.controller.BookingController;
 import com.cesardiaz.mvc.model.entity.Client;
