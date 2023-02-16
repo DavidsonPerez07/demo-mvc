@@ -75,19 +75,19 @@ public class BookingView {
             var opcion = input.nextLine();
             switch (opcion.toLowerCase().strip()) {
                 case "1":
-                    getBookings();
+                    //getBookings();
                     break;
                 case "2":
                     newBooking();
                     break;
                 case "3":
-                    modifyBooking();
+                    //modifyBooking();
                     break;
                 case "4":
-                    deleteBooking();
+                    //deleteBooking();
                     break;
                 case "5":
-                    showBooking();
+                    //showBooking();
                     break;
                 case "0":
                     show = false;
@@ -253,17 +253,17 @@ public class BookingView {
         }
     }
 
-    private void showBooking() {
-        System.out.println("Ingrese el cliente de la reserva a consultar: ");
-        var client = inClient();
-        var exists = controller.verifyExistBooking(client);
+    /*private void showBooking() {
+        System.out.println("Ingrese el id de la reserva a consultar: ");
+        var id = input.nextLine();
+        var exists = controller.verifyExistBooking(id);
         if (exists == true) {
-            controller.showBooking(client);
+            controller.showBooking(id);
         }
         else {
-            System.out.println("No existe ninguna reserva con este cliente");
+            System.out.println("No existe ninguna reserva con este id");
         }
-    }
+    }*/
 
     private void newCar() {
         System.out.println("""
@@ -344,6 +344,8 @@ public class BookingView {
                 Agregar una nueva reserva
                 ============================================
                 """);
+        System.out.println("Ingrese el id: ");
+        var id = input.nextLine();
         System.out.println("Ingrese la agencia: ");
         var agency = input.nextLine();
         System.out.println("Ingrese la fecha de inicio de la reserva: ");
@@ -356,22 +358,22 @@ public class BookingView {
 
         var client = inClient();
         
-        controller.addBooking(agency, startDate, finishDate, client);
+        controller.addBooking(id, agency, startDate, finishDate, client);
     }
 
-    private void getBookings() {
+    /*private void getBookings() {
         var bookings = controller.getBookings();
         System.out.println("""
                 Listado de reservas
                 ===========================================
                 """);
         bookings.forEach(System.out::println);
-    }
+    }*/
 
-    private void modifyBooking() {
-        System.out.println("Ingrese el cliente de la reserva a modificar: ");
-        var client = inClient();
-        var exists = controller.verifyExistBooking(client);
+    /*private void modifyBooking() {
+        System.out.println("Ingrese el id de la reserva a modificar: ");
+        var id = input.nextLine();
+        var exists = controller.verifyExistBooking(id);
         if (exists == true) {
             System.out.println("Ingrese una nueva fecha de inicio: ");
             var sDate = input.nextLine();
@@ -379,13 +381,13 @@ public class BookingView {
             System.out.println("Ingrese una nueva fecha de finalización: ");
             var fDate = input.nextLine();
             var finishDate = LocalDate.parse(fDate);
-            controller.modifyBooking(client, startDate, finishDate);
+            controller.modifyBooking(id, startDate, finishDate);
             System.out.println("Reserva modificada exitosamente!");
         }
         else {
-            System.out.println("No existen reservas registradas con este cliente");
+            System.out.println("No existen reservas registradas con este id");
         }
-    }
+    }*/
 
     public Client inClient() {
         System.out.print("Ingrese el DNI: ");
@@ -402,16 +404,16 @@ public class BookingView {
         return (new Client(null, dni, firstName, lastName, address, phone));
     }
 
-    private void deleteBooking() {
-        System.out.println("Ingrese el cliente de la reserva a eliminar: ");
-        var client = inClient();
-        var exists = controller.verifyExistBooking(client);
+    /*private void deleteBooking() {
+        System.out.println("Ingrese el id de la reserva a eliminar: ");
+        var id = input.nextLine();
+        var exists = controller.verifyExistBooking(id);
         if (exists == true) {
-            controller.deleteBooking(client);
+            controller.deleteBooking(id);
             System.out.println("Reserva eliminada exitosamente!");
         }
         else {
-            System.out.println("No existen reservas registradas con este cliente");
+            System.out.println("No existen reservas registradas con este id");
         }
-    }
+    }*/
 }

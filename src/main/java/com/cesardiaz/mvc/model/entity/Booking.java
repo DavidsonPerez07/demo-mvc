@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Booking {
+    private String id;
     private String agency;
     private LocalDate startDate;
     private LocalDate finishDate;
@@ -13,7 +14,8 @@ public class Booking {
     private Client client;
     private List<BookingCar> cars;
     
-    public Booking(String agency, LocalDate startDate, LocalDate finishDate, Client client) {
+    public Booking(String id, String agency, LocalDate startDate, LocalDate finishDate, Client client) {
+        this.id = id;
         this.agency = agency;
         this.startDate = startDate;
         this.finishDate = finishDate;
@@ -72,6 +74,10 @@ public class Booking {
     public String toString() {
         return agency + " | " + startDate + " | " + finishDate + " | "
                 + total + " | " + client + " | " + cars;
+    }
+
+    public String getId() {
+        return id;
     }
     
     

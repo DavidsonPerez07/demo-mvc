@@ -3,7 +3,10 @@ package com.cesardiaz.mvc.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.print.DocFlavor.STRING;
+
 import com.cesardiaz.mvc.model.BookingModel;
+import com.cesardiaz.mvc.model.ConnectionDB;
 import com.cesardiaz.mvc.model.entity.Booking;
 import com.cesardiaz.mvc.model.entity.Car;
 import com.cesardiaz.mvc.model.entity.Client;
@@ -22,6 +25,7 @@ public class BookingController {
     }
 
     public void initApp(){
+        ConnectionDB.createTables();
         view.showMenu();
     }
 
@@ -35,45 +39,19 @@ public class BookingController {
     }
 
     public boolean verifyExistClient(String dni) {
-        var clients = model.getClients();
-        var exists = false;
-        for (int i = 0; i < clients.size(); i++) {
-            if (clients.get(i).getDni().equals(dni)) {
-                exists = true;
-            }
-            else {
-                exists = false;
-            }
-        }
-        return exists;
+        return model.verifyExistClient(dni);
     }
 
     public void modifyClient(String dni, String mobilePhone, String address) {
-        var clients = model.getClients();
-        for (int i = 0; i < clients.size(); i++) {
-            if (clients.get(i).getDni().equals(dni)) {
-                clients.get(i).setAddress(address);
-                clients.get(i).setMobilePhone(mobilePhone);
-            }
-        }
+        model.modifyClient(dni, mobilePhone, address);
     }
 
     public void deleteClient(String dni) {
-        var clients = model.getClients();
-        for (int i = 0; i < clients.size(); i++) {
-            if (clients.get(i).getDni().equals(dni)) {
-                clients.remove(i);
-            }
-        }
+        model.deleteClient(dni);
     }
 
     public void showClient(String dni) {
-        var clients = model.getClients();
-        for (int i = 0; i < clients.size(); i++) {
-            if (clients.get(i).getDni().equals(dni)) {
-                clients.get(i).toString();
-            }
-        }
+        
     }
 
     public List<Car> getCars() {
@@ -85,93 +63,42 @@ public class BookingController {
     }
     
     public boolean verifyExistCar(String plate) {
-        var cars = model.getCars();
-        var exists = false;
-        for (int i = 0; i < cars.size(); i++) {
-            if (cars.get(i).getPlate().equals(plate)) {
-                exists = true;
-            }
-            else {
-                exists = false;
-            }
-        }
-        return exists;
+        return model.verifyExistCar(plate);
     }
-    
+
     public void modifyCar(String plate, String color) {
-        var cars = model.getCars();
-        for (int i = 0; i < cars.size(); i++) {
-            if (cars.get(i).getPlate().equals(plate)) {
-                cars.get(i).setColor(color);
-            }
-        }
+        model.modifyCar(plate, color);
     }
 
     public void deleteCar(String plate) {
-        var cars = model.getCars();
-        for (int i = 0; i < cars.size(); i++) {
-            if (cars.get(i).getPlate().equals(plate)) {
-                cars.remove(i);
-            }
-        }
+        model.deleteCar(plate);
     }
 
     public void showCar(String plate) {
-        var cars = model.getCars();
-        for (int i = 0; i < cars.size(); i++) {
-            if (cars.get(i).getPlate().equals(plate)) {
-                cars.get(i).toString();
-            }
-        }
+        
     }
 
-    public List<Booking> getBookings() {
+    /*public List<Booking> getBookings() {
         return model.getBookings();
+    }*/
+
+    public void addBooking(String id, String agency, LocalDate startDate, LocalDate finishDate, Client client) {
+        model.addBooking(new Booking(id, agency, startDate, finishDate, client));
     }
 
-    public void addBooking(String agency, LocalDate startDate, LocalDate finishDate, Client client) {
-        model.addBooking(new Booking(agency, startDate, finishDate, client));
+    /*public boolean verifyExistBooking(String id) {
+        return model.verifyExistBooking(id);
+    }*/
+
+    public void modifyBooking(String id, LocalDate startDate, LocalDate finishDate) {
+        model.modifyBooking(id, startDate, finishDate);
     }
 
-    public boolean verifyExistBooking(Client client) {
-        var bookings = model.getBookings();
-        var exists = false;
-        for (int i = 0; i < bookings.size(); i++) {
-            if (bookings.get(i).getClient().equals(client)) {
-                exists = true;
-            }
-            else {
-                exists = false;
-            }
-        }
-        return exists;
+    public void deleteBooking(String id) {
+        model.deleteBooking(id);
     }
 
-    public void modifyBooking(Client client, LocalDate startDate, LocalDate finishDate) {
-        var bookings = model.getBookings();
-        for (int i = 0; i < bookings.size(); i++) {
-            if (bookings.get(i).getClient().equals(client)) {
-                bookings.get(i).setStartDate(startDate);
-                bookings.get(i).setFinishDate(finishDate);
-            }
-        }
-    }
-
-    public void deleteBooking(Client client) {
-        var bookings = model.getBookings();
-        for (int i = 0; i < bookings.size(); i++) {
-            if (bookings.get(i).getClient().equals(client)) {
-                bookings.remove(i);
-            }
-        }
-    }
-
-    public void showBooking(Client client) {
-        var bookings = model.getBookings();
-        for (int i = 0; i < bookings.size(); i++) {
-            if (bookings.get(i).getClient().equals(client)) {
-                bookings.get(i).toString();
-            }
-        }
+    public void showBooking(String id) {
+        
     }
 }
