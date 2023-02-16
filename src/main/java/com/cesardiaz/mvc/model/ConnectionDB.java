@@ -67,10 +67,8 @@ public class ConnectionDB {
                         finish_date date not null,
                         total double not null,
                         customer varchar (100) not null,
-                        car varchar (100) not null,
                         primary key (booking_id),
-                        constraint booking_ibfk_1 foreign key (customer) references customer (dni),
-                        constraint booking_ibfk_2 foreign key (car) references car (plate)
+                        constraint booking_ibfk_1 foreign key (customer) references customer (dni)
                     )
                     """);
             stmt.execute("""
