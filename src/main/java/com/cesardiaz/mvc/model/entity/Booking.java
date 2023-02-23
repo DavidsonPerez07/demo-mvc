@@ -1,20 +1,19 @@
 package com.cesardiaz.mvc.model.entity;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Booking {
     private String id;
     private String agency;
-    private LocalDate startDate;
-    private LocalDate finishDate;
+    private String startDate;
+    private String finishDate;
     private Double total;
 
     private Client client;
     private List<BookingCar> cars;
     
-    public Booking(String id, String agency, LocalDate startDate, LocalDate finishDate, Client client) {
+    public Booking(String id, String agency, String startDate, String finishDate, Client client) {
         this.id = id;
         this.agency = agency;
         this.startDate = startDate;
@@ -24,11 +23,11 @@ public class Booking {
         this.cars = new ArrayList<>();
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public void setFinishDate(LocalDate finishDate) {
+    public void setFinishDate(String finishDate) {
         this.finishDate = finishDate;
     }
 
@@ -36,11 +35,11 @@ public class Booking {
         return agency;
     }
 
-    public LocalDate getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public LocalDate getFinishDate() {
+    public String getFinishDate() {
         return finishDate;
     }
 
@@ -72,8 +71,8 @@ public class Booking {
 
     @Override
     public String toString() {
-        return agency + " | " + startDate + " | " + finishDate + " | "
-                + total + " | " + client + " | " + cars;
+        return client.getDni() + " | " + client.getFirstName() + " | " + client.getLastName() + " | " + agency + " | " + startDate + " | " + finishDate + " | "
+                + total + " | " + cars;
     }
 
     public String getId() {

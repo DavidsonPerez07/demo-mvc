@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionDB {
-    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/car_booking";
+    //private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/car_booking_dv";
     private static final String DATABASE_URL_H2 = "jdbc:h2:./car_booking";
     private static final String DATABASE_USER = "root";
     private static final String DATABASE_PASSWORD = "Trosquielpro07";
@@ -15,7 +15,7 @@ public class ConnectionDB {
     public static Connection getConnection() {
         if (conn == null) {
             try {
-                conn = DriverManager.getConnection(DATABASE_URL, DATABASE_USER, DATABASE_PASSWORD);
+                conn = DriverManager.getConnection(DATABASE_URL_H2, DATABASE_USER, DATABASE_PASSWORD);
             } catch (SQLException e) {
                 throw new RuntimeException("No puedo conectarme a la base de datos: " + e.getMessage());
             }
@@ -63,8 +63,8 @@ public class ConnectionDB {
                     create table booking (
                         booking_id varchar (100) not null,
                         agency varchar (100) not null,
-                        start_date date not null,
-                        finish_date date not null,
+                        start_date varchar (100) not null,
+                        finish_date varchar (100) not null,
                         total double not null,
                         customer varchar (100) not null,
                         primary key (booking_id),
