@@ -1,5 +1,6 @@
 package com.cesardiaz.mvc.model;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +23,11 @@ public class BookingModel {
                     FROM customer
                     """);
             while (rset.next()) {
-                var client = new Client(rset.getString("client_code"), 
-                        rset.getString("dni"), 
-                        rset.getString("first_name"), 
-                        rset.getString("last_name"), 
-                        rset.getString("address"), 
+                var client = new Client(rset.getString("client_code"),
+                        rset.getString("dni"),
+                        rset.getString("first_name"),
+                        rset.getString("last_name"),
+                        rset.getString("address"),
                         rset.getString("phone_number"));
 
                 clients.add(client);
@@ -51,11 +52,11 @@ public class BookingModel {
                     FROM car
                     """);
             while (rset.next()) {
-                var car = new Car(rset.getInt("garage"), 
-                rset.getString("plate"), 
-                rset.getString("model"), 
-                rset.getString("color"), 
-                rset.getString("brand"));
+                var car = new Car(rset.getInt("garage"),
+                        rset.getString("plate"),
+                        rset.getString("model"),
+                        rset.getString("color"),
+                        rset.getString("brand"));
 
                 cars.add(car);
             }
@@ -74,31 +75,21 @@ public class BookingModel {
         try {
             var conn = ConnectionDB.getConnection();
             var stmt = conn.createStatement();
-            var rsetC = stmt.executeQuery("""
-                    SELECT client_code, dni, first_name, last_name, address, phone_number
-                    FROM customer
-                    """);
-            var client = new Client(rsetC.getString("client_code"),
-            rsetC.getString("dni"),
-            rsetC.getString("first_name"),
-            rsetC.getString("last_name"),
-            rsetC.getString("address"),
-            rsetC.getString("phone_numer"));
             var rset = stmt.executeQuery("""
                     SELECT booking_id, agency, start_date, finish_date, total, customer
                     FROM booking
                     """);
             while (rset.next()) {
-                var booking = new Booking(rset.getString("booking_id"), 
-                rset.getString("agency"), 
-                rset.getString("start_date"), 
-                rset.getString("finish_date"), 
-                client);
+
+                var booking = new Booking(rset.getString("booking_id"),
+                        rset.getString("agency"),
+                        rset.getDate("start_date").toLocalDate(),
+                        rset.getDate("finish_date").toLocalDate(),
+                        getClient(rset.getString("customer")));
 
                 bookings.add(booking);
             }
             rset.close();
-            rsetC.close();
             stmt.close();
         } catch (SQLException e) {
             System.err.println("Error getBookings(): " + e.getMessage());
@@ -112,10 +103,10 @@ public class BookingModel {
             var conn = ConnectionDB.getConnection();
 
             var sql = """
-                INSERT INTO customer (client_code, dni, first_name, last_name, address, phone_number) 
-                VALUES (?, ?, ?, ?, ?, ?)
-                """;
-            
+                    INSERT INTO customer (client_code, dni, first_name, last_name, address, phone_number)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """;
+
             var stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, client.getCode());
@@ -133,12 +124,12 @@ public class BookingModel {
     public void addCar(Car car) {
         try {
             var conn = ConnectionDB.getConnection();
-            
+
             var sql = """
                     INSERT INTO car (garage, plate, model, color, brand)
                     VALUES (?, ?, ?, ?, ?)
                     """;
-            
+
             var stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, car.getGarage());
@@ -146,7 +137,7 @@ public class BookingModel {
             stmt.setString(3, car.getModel());
             stmt.setString(4, car.getColor());
             stmt.setString(5, car.getBrand());
-            stmt.executeUpdate();    
+            stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error addCar(): " + e.getMessage());
         }
@@ -160,13 +151,13 @@ public class BookingModel {
                     INSERT INTO booking (booking_id, agency, start_date, finish_date, total, customer)
                     VALUES (?, ?, ?, ?, ?, ?)
                     """;
-            
+
             var stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, booking.getId());
             stmt.setString(2, booking.getAgency());
-            stmt.setString(3, booking.getStartDate());
-            stmt.setString(4, booking.getFinishDate());
+            stmt.setDate(3, Date.valueOf(booking.getStartDate()));
+            stmt.setDate(4, Date.valueOf(booking.getFinishDate()));
             stmt.setDouble(5, booking.getTotal());
             stmt.setString(6, booking.getClient().getDni());
             stmt.executeUpdate();
@@ -182,10 +173,10 @@ public class BookingModel {
             var stmt = conn.prepareStatement(query);
             stmt.setString(1, dni);
             stmt.executeUpdate();
-            
+
         } catch (SQLException e) {
             System.err.println("Error deleteClient(): " + e.getMessage());
-        } 
+        }
     }
 
     public void deleteCar(String plate) {
@@ -195,10 +186,10 @@ public class BookingModel {
             var stmt = conn.prepareStatement(query);
             stmt.setString(1, plate);
             stmt.executeUpdate();
-            
+
         } catch (SQLException e) {
             System.err.println("Error deleteCar(): " + e.getMessage());
-        } 
+        }
     }
 
     public void deleteBooking(String id) {
@@ -208,21 +199,21 @@ public class BookingModel {
             var stmt = conn.prepareStatement(query);
             stmt.setNString(1, id);
             stmt.executeUpdate();
-            
+
         } catch (SQLException e) {
             System.err.println("Error deleteBooking(): " + e.getMessage());
-        } 
+        }
     }
 
     public void modifyClient(String dni, Client client) {
         try {
             var conn = ConnectionDB.getConnection();
             var query = """
-                UPDATE customer 
-                SET phone_number = ?, 
-                    address = ? 
-                    WHERE dni = ?
-                    """;
+                    UPDATE customer
+                    SET phone_number = ?,
+                        address = ?
+                        WHERE dni = ?
+                        """;
             var stmt = conn.prepareStatement(query);
             stmt.setString(1, client.getMobilePhone());
             stmt.setString(2, client.getAddress());
@@ -237,10 +228,10 @@ public class BookingModel {
         try {
             var conn = ConnectionDB.getConnection();
             String query = """
-                UPDATE car 
-                SET color = ? 
-                WHERE plate = ?
-                """;
+                    UPDATE car
+                    SET color = ?
+                    WHERE plate = ?
+                    """;
             var stmt = conn.prepareStatement(query);
             stmt.setString(1, car.getColor());
             stmt.setString(2, plate);
@@ -254,14 +245,14 @@ public class BookingModel {
         try {
             var conn = ConnectionDB.getConnection();
             String query = """
-                UPDATE booking 
-                SET start_date = ?, 
-                finish_date = ? 
-                WHERE booking_id = ?
-                """;
+                    UPDATE booking
+                    SET start_date = ?,
+                    finish_date = ?
+                    WHERE booking_id = ?
+                    """;
             var stmt = conn.prepareStatement(query);
-            stmt.setString(1, booking.getStartDate());
-            stmt.setString(2, booking.getFinishDate());
+            stmt.setDate(1, Date.valueOf(booking.getStartDate()));
+            stmt.setDate(2, Date.valueOf(booking.getFinishDate()));
             stmt.setString(3, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -282,11 +273,11 @@ public class BookingModel {
             stmt.setString(1, dni);
             var rset = stmt.executeQuery();
             if (rset.next()) {
-                client = new Client(rset.getString("client_code"), 
-                        rset.getString("dni"), 
-                        rset.getString("first_name"), 
-                        rset.getString("last_name"), 
-                        rset.getString("address"), 
+                client = new Client(rset.getString("client_code"),
+                        rset.getString("dni"),
+                        rset.getString("first_name"),
+                        rset.getString("last_name"),
+                        rset.getString("address"),
                         rset.getString("phone_number"));
             }
             rset.close();
@@ -310,11 +301,11 @@ public class BookingModel {
             stmt.setString(1, plate);
             var rset = stmt.executeQuery();
             if (rset.next()) {
-                car = new Car(rset.getInt("garage"), 
-                rset.getString("plate"), 
-                rset.getString("model"), 
-                rset.getString("color"), 
-                rset.getString("brand"));
+                car = new Car(rset.getInt("garage"),
+                        rset.getString("plate"),
+                        rset.getString("model"),
+                        rset.getString("color"),
+                        rset.getString("brand"));
             }
             rset.close();
             stmt.close();
@@ -329,18 +320,8 @@ public class BookingModel {
         try {
             var conn = ConnectionDB.getConnection();
             var stmtC = conn.createStatement();
-            var rsetC = stmtC.executeQuery("""
-                    SELECT client_code, dni, first_name, last_name, address, phone_number
-                    FROM customer
-                    """);
-            var client = new Client(rsetC.getString("client_code"),
-            rsetC.getString("dni"),
-            rsetC.getString("first_name"),
-            rsetC.getString("last_name"),
-            rsetC.getString("address"),
-            rsetC.getString("phone_numer"));
             var sql = """
-                    SELECT booking_id, agency, start_date, finish_date
+                    SELECT booking_id, agency, start_date, finish_date, total, customer
                     FROM booking
                     WHERE booking_id = ?
                     """;
@@ -348,18 +329,19 @@ public class BookingModel {
             stmt.setString(1, id);
             var rset = stmt.executeQuery();
             if (rset.next()) {
-                booking = new Booking(rset.getString("booking_id"), 
-                rset.getString("agency"), 
-                rset.getString("start_date"), 
-                rset.getString("finish_date"), 
-                client);
+                booking = new Booking(rset.getString("booking_id"),
+                        rset.getString("agency"),
+                        rset.getDate("start_date").toLocalDate(),
+                        rset.getDate("finish_date").toLocalDate(),
+                        getClient(rset.getString("customer")));
+                        
+                // TODO: Faltan los carros de la reserva
             }
             rset.close();
-            rsetC.close();
             stmt.close();
             stmtC.close();
         } catch (SQLException e) {
-            System.err.println("Error showCar(): " + e.getMessage());
+            System.err.println("Error getBooking(): " + e.getMessage());
         }
         return booking;
     }

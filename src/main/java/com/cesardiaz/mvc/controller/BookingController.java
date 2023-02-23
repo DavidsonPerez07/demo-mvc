@@ -1,5 +1,7 @@
 package com.cesardiaz.mvc.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.cesardiaz.mvc.model.BookingModel;
@@ -102,7 +104,10 @@ public class BookingController {
     }
 
     public void addBooking(String id, String agency, String startDate, String finishDate, Client client) {
-        model.addBooking(new Booking(id, agency, startDate, finishDate, client));
+        var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        var newStartDate = LocalDate.from(formatter.parse(startDate));
+        var newfinishDate = LocalDate.from(formatter.parse(finishDate));
+        model.addBooking(new Booking(id, agency, newStartDate, newfinishDate, client));
     }
 
     public boolean searchBooking(String id) {
@@ -123,8 +128,9 @@ public class BookingController {
             throw new RuntimeException("No existe una reserva con el id dado");
         }
 
-        booking.setStartDate(startDate);
-        booking.setFinishDate(finishDate);
+        var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        booking.setStartDate(LocalDate.from(formatter.parse(startDate)));
+        booking.setFinishDate(LocalDate.from(formatter.parse(finishDate)));
 
         model.modifyBooking(id, booking);
     }

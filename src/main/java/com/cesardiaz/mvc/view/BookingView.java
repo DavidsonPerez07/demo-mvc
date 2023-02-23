@@ -85,7 +85,7 @@ public class BookingView {
                     showBooking();
                     break;
                 case "0":
-                    showMenu();
+                    show = false;
                     break;
                 default:
                     throw new IllegalArgumentException("Opcion no válida");
@@ -165,7 +165,7 @@ public class BookingView {
                     showClient();
                     break;
                 case "0", "":
-                    showMenu();
+                    show = false;
                     break;
                 default:
                     throw new IllegalArgumentException("Opcion no válida");
