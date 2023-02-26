@@ -110,30 +110,6 @@ public class BookingModel {
         return bookings;
     }
 
-    public List<BookingCar> getBookingCars() {
-        var bookingCars = new ArrayList<BookingCar>();
-        try {
-            var conn = ConnectionDB.getConnection();
-            var stmt = conn.createStatement();
-            var rset = stmt.executeQuery("""
-                    SELECT liter_gas, delivery_state, booking, car
-                    FROM booking_car
-                    """);
-            while (rset.next()) {
-                var bookingCar = new BookingCar(getBooking(rset.getString("booking")), 
-                        getCar(rset.getString("car")), 
-                        rset.getFloat("liter_gas"));
-                bookingCars.add(bookingCar);
-            }        
-            rset.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.err.println("Error getBookings(): " + e.getMessage());
-        }
-
-        return bookingCars;
-    }
-
     public void addClient(Client client) {
         try {
             var conn = ConnectionDB.getConnection();
