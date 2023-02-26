@@ -72,10 +72,9 @@ public class BookingModel {
 
     public List<Booking> getBookings() {
         var bookings = new ArrayList<Booking>();
-        var bookingCars = new ArrayList<BookingCar>();
-        Booking booking = null;
-        BookingCar bookingCar = null;
         try {
+            var carPlate = "";
+            Float litersGas = 0.0f;
             var conn = ConnectionDB.getConnection();
             var stmt2 = conn.createStatement();
             var rset2 = stmt2.executeQuery("""
@@ -83,31 +82,27 @@ public class BookingModel {
                     FROM booking_car
                     """);
             while (rset2.next()) {
-                bookingCar = new BookingCar(getBooking(rset2.getString("booking")), 
-                        getCar(rset2.getString("car")), 
-                        rset2.getFloat("liter_gas"));
-                bookingCars.add(bookingCar);
+                carPlate = rset2.getString("car");
+                litersGas = rset2.getFloat("liter_gas");
             }
-
             var stmt = conn.createStatement();
             var rset = stmt.executeQuery("""
                     SELECT booking_id, agency, start_date, finish_date, total, customer
                     FROM booking
                     """);
             while (rset.next()) {
-
-                booking = new Booking(rset.getString("booking_id"),
+                var booking = new Booking(rset.getString("booking_id"),
                         rset.getString("agency"),
                         rset.getDate("start_date").toLocalDate(),
                         rset.getDate("finish_date").toLocalDate(),
                         getClient(rset.getString("customer")));
-                booking.addCar(bookingCar.getCar(), bookingCar.getLitersGas());
+                booking.addCar(getCar(carPlate), litersGas);
+                Double total = (double) (2000000 + (litersGas * 8500));
+                booking.setTotal(total);
                 bookings.add(booking);
             }
             rset.close();
             stmt.close();
-            rset2.close();
-            stmt2.close();
         } catch (SQLException e) {
             System.err.println("Error getBookings(): " + e.getMessage());
         }
@@ -207,22 +202,23 @@ public class BookingModel {
         }
     }
 
-    public void addBookingCar(Booking booking, Car car, Float litersGas, String delSt) {
+    public void addBookingCar(String bookingId, String carPlate, Float litersGas) {
         try {
+            Booking booking = getBooking(bookingId);
+            Car car = getCar(carPlate);
             var conn = ConnectionDB.getConnection();
             var sql = """
-                    INSERT INTO booking_car (liter_gas, delivery_state, booking, car)
-                    VALUES (?, ?, ?, ?)
+                    INSERT INTO booking_car (liter_gas, booking, car)
+                    VALUES (?, ?, ?)
                     """;
             var stmt = conn.prepareStatement(sql);
 
             stmt.setFloat(1, litersGas);
-            stmt.setNString(2, delSt);
-            stmt.setString(3, booking.getId());
-            stmt.setString(4, car.getPlate());
+            stmt.setString(2, booking.getId());
+            stmt.setString(3, car.getPlate());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Error addCarToBooking(): " + e.getMessage());
+            System.err.println("Error addBookingCar(): " + e.getMessage());
         }
     }
 
@@ -402,6 +398,29 @@ public class BookingModel {
             System.err.println("Error getBooking(): " + e.getMessage());
         }
         return booking;
+    }
+
+    public BookingCar getBookingCar() {
+        BookingCar bookingCar = null;
+        try {
+            var conn = ConnectionDB.getConnection();
+            var sql = """
+                    SELECT liter_gas, delivery_state, booking, car
+                    FROM booking_car
+                    """;
+            var stmt = conn.prepareStatement(sql);
+            var rset = stmt.executeQuery();
+            if (rset.next()) {
+                bookingCar = new BookingCar(getBooking(rset.getString("booking")),
+                        getCar(rset.getString("car")),
+                        rset.getFloat("liter_gas"));
+            }
+            rset.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.err.println("Error getBookingCar(): " + e.getMessage());
+        }
+        return bookingCar;
     }
 
     public boolean verifyExistClient(String dni) {

@@ -64,6 +64,7 @@ public class BookingView {
                     3. Modificar reserva
                     4. Eliminar reserva
                     5. Consultar reserva
+                    6. Reservar autos
                     0. Volver al menú
                     """);
             System.out.println("Ingrese su opción: ");
@@ -84,8 +85,10 @@ public class BookingView {
                 case "5":
                     showBooking();
                     break;
+                case "6":
+                    addBookingCar();
                 case "0":
-                    show = false;
+                    showMenu();
                     break;
                 default:
                     throw new IllegalArgumentException("Opcion no válida");
@@ -165,7 +168,7 @@ public class BookingView {
                     showClient();
                     break;
                 case "0", "":
-                    show = false;
+                    showMenu();
                     break;
                 default:
                     throw new IllegalArgumentException("Opcion no válida");
@@ -203,6 +206,29 @@ public class BookingView {
                 ===========================================
                 """);
         clients.forEach(System.out::println);
+        waitEnter();
+    }
+
+    private void addBookingCar() {
+        System.out.println("Ingrese el Id de la reserva: ");
+        var id = input.nextLine();
+        var exists = controller.searchBooking(id);
+        if (exists) {
+            System.out.println("Ingrese la placa del auto a reservar: ");
+            var plate = input.nextLine();
+            var exists2 = controller.searchCar(plate);
+            if (exists2) {
+                System.out.println("Ingrese la cantidad de litros de gasolina en depósito: ");
+                var litersGas = input.nextFloat();
+                controller.addBookingCar(id, plate, litersGas);
+            }
+            else {
+                System.out.println("El auto no existe");
+            }
+        }
+        else {
+            System.out.println("La reserva no existe");
+        }
         waitEnter();
     }
 

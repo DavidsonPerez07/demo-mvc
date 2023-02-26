@@ -56,6 +56,10 @@ public class Booking {
         return cars;
     }
 
+    public void setTotal(Double total) {
+        this.total = total;
+    }
+
     public void addCar(Car car, Float litersGas) {
         var bookingCar = new BookingCar(this, car, litersGas);
         cars.add(bookingCar);
@@ -70,10 +74,18 @@ public class Booking {
         cars.remove(bookingCar);
     }
 
+    private String printCars() {
+        var carsTP = "";
+        for (int i = 0; i < getCars().size(); i++) {
+            carsTP = getCars().get(i).getCar().getPlate();
+        }
+        return carsTP;
+    }
+
     @Override
     public String toString() {
         return id + " | " + client.getDni() + " | " + client.getFirstName() + " | " + client.getLastName() + " | "
-                + agency + " | " + startDate + " | " + finishDate + " | " + total + " | " + cars;
+                + agency + " | " + startDate + " | " + finishDate + " | " + total + " | " + printCars();
     }
 
     public String getId() {

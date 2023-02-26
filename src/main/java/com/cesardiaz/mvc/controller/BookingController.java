@@ -111,8 +111,7 @@ public class BookingController {
     }
 
     public void addBookingCar(String id, String plate, Float litersGas) {
-        var deliveryState = "RESERVED";
-        model.addBookingCar(model.getBooking(id), model.getCar(plate), litersGas, deliveryState);
+        model.addBookingCar(id, plate, litersGas);
     }
 
     public boolean searchBooking(String id) {

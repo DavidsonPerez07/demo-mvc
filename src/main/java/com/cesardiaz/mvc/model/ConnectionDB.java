@@ -15,7 +15,7 @@ public class ConnectionDB {
     public static Connection getConnection() {
         if (conn == null) {
             try {
-                conn = DriverManager.getConnection(DATABASE_URL_H2, DATABASE_USER, DATABASE_PASSWORD);
+                conn = DriverManager.getConnection(DATABASE_URL_H2  , DATABASE_USER, DATABASE_PASSWORD);
             } catch (SQLException e) {
                 throw new RuntimeException("No puedo conectarme a la base de datos: " + e.getMessage());
             }
