@@ -110,6 +110,11 @@ public class BookingController {
         model.addBooking(new Booking(id, agency, newStartDate, newfinishDate, client));
     }
 
+    public void addBookingCar(String id, String plate, Float litersGas) {
+        var deliveryState = "RESERVED";
+        model.addBookingCar(model.getBooking(id), model.getCar(plate), litersGas, deliveryState);
+    }
+
     public boolean searchBooking(String id) {
         return model.verifyExistBooking(id);
     }
